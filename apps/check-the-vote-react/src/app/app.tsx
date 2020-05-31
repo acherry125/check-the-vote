@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Message } from '@check-the-vote/api-interfaces';
 
+import CongressionalChoice from 'components/CongressionalChoice';
 export const App = () => {
   const [m, setMessage] = useState<Message>({ message: '' });
 
@@ -12,14 +13,7 @@ export const App = () => {
 
   return (
     <>
-      <div style={{ textAlign: 'center' }}>
-        <h1>Welcome to check-the-vote-react!</h1>
-        <img
-          width="450"
-          src="https://raw.githubusercontent.com/nrwl/nx/master/nx-logo.png"
-        />
-      </div>
-      <div>{m.message}</div>
+      <CongressionalChoice />
     </>
   );
 };

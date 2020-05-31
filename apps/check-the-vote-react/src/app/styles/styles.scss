@@ -1,0 +1,91 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'normalize.scss';
+@import './font-families.scss';
+
+/* Color Theme Swatches in Hex */
+$black: #07080d;
+$white: #f0f0f2;
+$steel: #293040;
+$fog: #5e6d8c;
+$grey: #4c5d73;
+
+/* Color Theme Swatches in Hex */
+$pink: #bf7a8d;
+$blue-dark: #011526;
+$blue-med: #0d2840;
+$blue-light: #325a73;
+$blue-green: #6393a6;
+
+$pink--s-40: saturate($pink, 40%);
+$blue-green--s-40: saturate($blue-green, 40%);
+
+html,
+body,
+#root {
+    height: 100%;
+}
+
+.dark-theme {
+    background: $black;
+    overflow: auto;
+    min-height: 100%;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p {
+        color: $white;
+        font-family: NewsCycle, sans-serif;
+    }
+}
+
+.page-container--standard {
+    padding: 2rem 1rem;
+}
+
+.page-header { 
+    text-align: center;
+}
+
+.congress-choice-container {
+    display: grid;
+    grid-template-columns: 10px auto 30% 30% auto 10px;
+    grid-template-rows: 25% auto 300px auto 25%;
+
+    &__option {
+        grid-row-start: 3;
+        grid-row-end: 4;
+        font-family: Cinzel, sans-serif;
+        font-weight: bold;
+        font-size: 4rem;
+        background-image: linear-gradient(70deg, $steel, 45%, lighten($steel, 1%));
+        margin: 0.25rem 1.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        &:hover,
+        &:focus,
+        &:active {
+            opacity: 0.6;
+        }
+    }
+
+    &__option:first-child {
+        color: $blue-green--s-40;
+        grid-column-start: 3;
+        grid-column-end: 4;
+    }
+
+    &__option:nth-child(2) {
+        color: $pink--s-40;
+        grid-column-start: 4;
+        grid-column-end: 5;
+    }
+}
+
+.big-button-link {
+    text-decoration: none;
+}

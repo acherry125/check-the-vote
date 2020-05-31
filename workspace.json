@@ -19,7 +19,7 @@
               "apps/check-the-vote-react/src/favicon.ico",
               "apps/check-the-vote-react/src/assets"
             ],
-            "styles": ["apps/check-the-vote-react/src/styles.scss"],
+            "styles": ["apps/check-the-vote-react/src/app/styles/styles.scss"],
             "scripts": [],
             "webpackConfig": "@nrwl/react/plugins/webpack"
           },

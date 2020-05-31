@@ -16,7 +16,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@check-the-vote/api-interfaces": ["libs/api-interfaces/src/index.ts"]
+      "@check-the-vote/api-interfaces": ["libs/api-interfaces/src/index.ts"],
+      "components/*": ["apps/check-the-vote-react/src/app/components/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]
