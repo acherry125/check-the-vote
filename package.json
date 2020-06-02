@@ -27,6 +27,7 @@
   },
   "private": true,
   "dependencies": {
+    "aws-sdk": "^2.688.0",
     "document-register-element": "1.13.1",
     "express": "4.17.1",
     "lodash": "^4.17.15",
