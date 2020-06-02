@@ -20,6 +20,7 @@ const createQueryString = (query = []) => {
 const createCongressChamberEndpoint = (
   congressNumber,
   chamber,
+  apiType,
   resource,
   query
 ) => {
@@ -114,7 +115,7 @@ const requestCongressPage = (pageURL, count = 0) => {
   }
 };
 
-module.exports = {
+export default {
   CONGRESS_API_BASE_URL,
   createCongressChamberEndpoint,
   createCongressChamberBaseResourceEndpoint,

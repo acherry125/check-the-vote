@@ -1,6 +1,6 @@
 import * as express from 'express';
 import { Message } from '@check-the-vote/api-interfaces';
-import ApiUtils from './app/ApiUtils.js';
+import SyncUtils from './app/SyncUtils';
 
 var schedule = require('node-schedule');
 
@@ -25,8 +25,4 @@ const server = app.listen(port, () => {
 
 server.on('error', console.error);
 
-const syncDb = () => {
-  // call the api, get all the data, parse it, store it
-}
-
-const job = schedule.scheduleJob({hour: [5, 17], minute: 0}, syncDb);
+const job = schedule.scheduleJob({hour: [5, 17], minute: 0}, SyncUtils.syncDb);
