@@ -2,6 +2,8 @@ import * as express from 'express';
 import { Message } from '@check-the-vote/api-interfaces';
 import ApiUtils from './app/ApiUtils.js';
 
+var schedule = require('node-schedule');
+
 const app = express();
 
 const greeting: Message = { message: 'Welcome to api!' };
@@ -11,7 +13,8 @@ app.get('/api', (req, res) => {
 });
 
 app.get('/api/v1/bill', (req, res) => {
-  console.log(req);
+  const query = req.query;
+  console.log(query);
   res.send('This is a test.')
 })
 
@@ -19,4 +22,11 @@ const port = process.env.port || 3333;
 const server = app.listen(port, () => {
   console.log('Listening at http://localhost:' + port + '/api');
 });
+
 server.on('error', console.error);
+
+const syncDb = () => {
+  // call the api, get all the data, parse it, store it
+}
+
+const job = schedule.scheduleJob({hour: [5, 17], minute: 0}, syncDb);
