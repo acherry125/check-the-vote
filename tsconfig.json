@@ -17,7 +17,8 @@
     "baseUrl": ".",
     "paths": {
       "@check-the-vote/api-interfaces": ["libs/api-interfaces/src/index.ts"],
-      "components/*": ["apps/check-the-vote-react/src/app/components/*"]
+      "components/*": ["apps/check-the-vote-react/src/app/components/*"],
+      "viewUtils/*": ["apps/check-the-vote-react/src/app/viewUtils/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]
