@@ -1,10 +1,17 @@
 import React from 'react';
+import RestUtils from 'viewUtils/restUtils';
 import BillSearch from 'components/BillSearch';
 
 export const CongressionalChoice = () => {
 
   const handleSubmit = (chamber: String, billNumber: String) => {
-    console.log(chamber, billNumber);
+    RestUtils.searchByChamberAndBillNumber(chamber, billNumber)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(err => {
+        console.error(err);
+      })
   }
 
   return (

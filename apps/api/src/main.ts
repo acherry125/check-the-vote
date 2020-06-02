@@ -10,16 +10,9 @@ app.get('/api', (req, res) => {
   res.send(greeting);
 });
 
-app.get('/api/v1/test', (req, res) => {
-  ApiUtils.requestCongressPage(ApiUtils.createCongressChamberBaseResourceEndpoint('116', 'senate', 'members.json'))
-    .then(apiRes => {
-      console.log(apiRes);
-      const response: Message = { message: apiRes };
-      res.send(response);
-    })
-    .catch(err => {
-      console.error(err);
-    })
+app.get('/api/v1/bill', (req, res) => {
+  console.log(req);
+  res.send('This is a test.')
 })
 
 const port = process.env.port || 3333;
