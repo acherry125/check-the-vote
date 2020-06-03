@@ -26,3 +26,5 @@ const server = app.listen(port, () => {
 server.on('error', console.error);
 
 const job = schedule.scheduleJob({hour: [5, 17], minute: 0}, SyncUtils.syncDb);
+
+SyncUtils.syncDb();
