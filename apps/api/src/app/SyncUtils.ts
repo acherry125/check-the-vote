@@ -8,6 +8,8 @@ const createBillsTable = () => {
 
 const syncDb = () => {
   createBillsTable();
+  DbUtils.testQuery();
+
 }
 
 export default {

@@ -29,7 +29,28 @@ const createTableIfNotExists = (tableName, createParams) => {
   })
 }
 
+const testQuery = () => {
+  var params = {
+    ExpressionAttributeValues: {
+     ":billName": {
+       S: "house freedom act"
+      },
+      ":cngrNumber": {
+        N: '0'
+      }
+    }, 
+    KeyConditionExpression: "billName = :billName and cngrNmbr= :cngrNumber", 
+    ProjectionExpression: "billNmbr,cngrNmbr,billName", 
+    TableName: "Bills",
+    IndexName: 'billName_index',
+   };
+   dynamodb.query(params, function(err, data) {
+     if (err) console.log(err, err.stack); // an error occurred
+     else     console.log(data.Items);           // successful response
+   });
+}
 
 export default {
-  createTableIfNotExists
+  createTableIfNotExists,
+  testQuery
 }
