@@ -7,7 +7,7 @@ export const BillSearch = (props) => {
   const [chamber, setChamber] = useState('');
   const [billNumber, setBillNumber] = useState('');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>):void => {
     e.preventDefault();
     props.handleSubmit(chamber, billNumber)
   }
