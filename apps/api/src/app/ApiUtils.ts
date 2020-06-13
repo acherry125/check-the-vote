@@ -9,7 +9,7 @@ const OFFSET_INCREMENT = 20;
 const createQueryString = (query = []) => {
   if (!_.isEmpty(query)) {
     const queryString = _.join(
-      _.map(query, (val, key) => key + '=' + 'val'),
+      _.map(query, (val, key) => key + '=' + val),
       '&'
     );
     return '?' + queryString;

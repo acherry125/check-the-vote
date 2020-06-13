@@ -1,9 +1,8 @@
 import { config, DynamoDB, Endpoint, AWSError } from "aws-sdk";
 import ApiUtils from './ApiUtils';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { BILLS_TABLE_DEFINITION } from './DbTableDefinitions';
-import { request } from 'http';
-import { callbackify } from 'util';
+import { ApiBill, DynamoBill } from './types';
 
 config.update({ region: 'us-east-1' });
 
@@ -16,6 +15,8 @@ const docClient = new DynamoDB.DocumentClient({
 });
 
 const createTableIfNotExists = (tableName, createParams): Promise<Object> => {
+
+  console.log(`Attempting to create table: ${tableName}`);
   const describeParams = {
     TableName: tableName
   };
@@ -39,6 +40,7 @@ const createTableIfNotExists = (tableName, createParams): Promise<Object> => {
           return reject(err);
         }
       } else {
+        console.log(`Table ${tableName} already exists.`);
         return resolve(description);
       }
     })
@@ -46,10 +48,14 @@ const createTableIfNotExists = (tableName, createParams): Promise<Object> => {
 
 }
 
+const createBillsTable = (): Promise<Object> => {
+  return createTableIfNotExists(BILLS_TABLE_DEFINITION.TableName, BILLS_TABLE_DEFINITION);
+}
+
 const toBatches = (items): Array<Array<Object>> => {
   const BATCH_SIZE = 25;
   const batches: Array<Array<Object>> = [];
-  _.forEach(items, (b, index) => {
+  _.forEach(items, (b, index: number) => {
     const batchIndex = _.floor(index / BATCH_SIZE);
     const itemIndex = index % BATCH_SIZE;
     _.set(batches, [batchIndex, itemIndex], b);
@@ -68,9 +74,6 @@ const getTypeCodeOfVal = (val): string => {
   }
 }
 
-type ApiBill = | any;
-type DynamoBill = | any;
-
 const convertBillForDb = (bill: ApiBill): DynamoBill => {
   return {
     ...bill,
@@ -86,8 +89,7 @@ const writeBatchParamsToTable = (name: string, batches: Array<Array<Object>>, ca
     return;
   }
 
-  const batchesToWrite = [...batches];
-  const currBatch = batchesToWrite.shift();
+  const currBatch = batches[0];
   const params = {
     RequestItems: {
       [name]: currBatch,
@@ -100,12 +102,12 @@ const writeBatchParamsToTable = (name: string, batches: Array<Array<Object>>, ca
       callBack(false, err);
     }
     else {
-      writeBatchParamsToTable(name, batchesToWrite, callBack);
+      writeBatchParamsToTable(name, _.slice(batches, 1), callBack);
     }
   });
 }
 
-const insertBillData = (session: number, chamber: string, bills: Array<ApiBill>): Promise<Object> => {
+const insertBillData = (session: number, chamber: string, bills: Array<ApiBill>): Promise<boolean | AWSError> => {
   console.log('Inserting data for: ', session, chamber);
   const batchesOfBillsToWrite = toBatches(bills);
 
@@ -124,7 +126,7 @@ const insertBillData = (session: number, chamber: string, bills: Array<ApiBill>)
   return new Promise((resolve, reject) => {
     const handler = (success: boolean, error: AWSError) => {
       if (success) {
-        return resolve();
+        return resolve(success);
       } else {
         return reject(error);
       }
@@ -136,20 +138,6 @@ const insertBillData = (session: number, chamber: string, bills: Array<ApiBill>)
 
 
 
-}
-
-const populateDBWithBills = (): Promise<void | Object> => {
-  const session = 115;
-  const chamber = 'house';
-  const endpoint: string = ApiUtils.createCongressChamberEndpoint(session, chamber, 'bills','active.json', { offset: 0 });
-  return ApiUtils.requestCongressPage(endpoint)
-    .then(apiRes => {
-      const bills = apiRes[0]['bills'];
-      return insertBillData(session, chamber, bills);
-    })
-    .catch(err => {
-      
-    })
 }
 
 const testQuery = () => {
@@ -175,6 +163,7 @@ const testQuery = () => {
 
 export default {
   createTableIfNotExists,
-  populateDBWithBills,
+  createBillsTable,
+  insertBillData,
   testQuery
 }

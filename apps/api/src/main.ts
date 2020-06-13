@@ -1,5 +1,6 @@
 import * as express from 'express';
 import { Message } from '@check-the-vote/api-interfaces';
+import DbUtils from './app/DbUtils';
 import SyncUtils from './app/SyncUtils';
 import ApiUtils from './app/ApiUtils';
 
@@ -47,6 +48,8 @@ const server = app.listen(port, () => {
 });
 
 server.on('error', console.error);
+
+DbUtils.createBillsTable();
 
 // const job = schedule.scheduleJob({hour: [5, 17], minute: 0}, SyncUtils.syncDb);
 
