@@ -70,7 +70,7 @@ const nextPage = (endpoint, result) => {
   return `${finalEndpoint}${OFFSET}=${newOffset}`;
 };
 
-const handleResponseBody = (body, requestCount) => {
+const handleResponseBody = (body): Object => {
   const { results } = body;
   const count = _.get(results, [0, 'num_results']);
   const offset = _.get(results, [0, 'offset']);
@@ -80,7 +80,7 @@ const handleResponseBody = (body, requestCount) => {
   return results;
 };
 
-const handleResponse = (response) => {
+const handleResponse = (response: Response): Object => {
   if (response.ok && response.status === 200) {
     return response.body;
   } else {
@@ -88,7 +88,7 @@ const handleResponse = (response) => {
   }
 };
 
-const requestCongressPage = (pageURL, count = 0) => {
+const requestCongressPage = (pageURL: string, count:number = 0): Promise<Response> => {
   console.log(
     'Attempting to request page at ' + pageURL + ' with count ' + count
   );
@@ -99,7 +99,7 @@ const requestCongressPage = (pageURL, count = 0) => {
       .get(urlToCall)
       .set(AUTH_HEADER, apiKey)
       .then(handleResponse)
-      .then((res) => handleResponseBody(res, count))
+      .then((res) => handleResponseBody(res))
       .catch((err) => {
         console.error('Error GETing ' + CONGRESS_API_BASE_URL + pageURL);
         return {

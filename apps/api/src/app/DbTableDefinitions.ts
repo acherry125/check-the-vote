@@ -1,31 +1,35 @@
 export const BILLS_TABLE_DEFINITION = {
   TableName: 'Bills',
   KeySchema: [
-    { AttributeName: 'cngrNmbr', KeyType: 'HASH' },
-    { AttributeName: 'billNmbr', KeyType: 'RANGE' },
+    { AttributeName: 'billNmbr', KeyType: 'HASH' },
+    { AttributeName: 'chamber', KeyType: 'RANGE' },
   ],
   AttributeDefinitions: [
-    { AttributeName: 'cngrNmbr', AttributeType: 'N' },
     { AttributeName: 'billNmbr', AttributeType: 'S' },
-    { AttributeName: 'billName', AttributeType: 'S' },
+    { AttributeName: 'chamber', AttributeType: 'S' },
+    { AttributeName: 'session', AttributeType: 'N' }
   ],
-  LocalSecondaryIndexes: [
+  GlobalSecondaryIndexes: [
     {
-      IndexName: 'billName_index',
+      IndexName: 'session_chamber',
       KeySchema: [
         {
-          AttributeName: 'cngrNmbr',
-          KeyType: 'HASH'
+          AttributeName: 'session',
+          KeyType: 'HASH',
         },
         {
-          AttributeName: 'billName',
+          AttributeName: 'chamber',
           KeyType: 'RANGE',
-        },
+        }
       ],
       Projection: {
         ProjectionType: 'ALL'
+      },
+      ProvisionedThroughput: {
+        ReadCapacityUnits: 1, /* required */
+        WriteCapacityUnits: 1 /* required */
       }
-    },
+    }
   ],
   ProvisionedThroughput: {
     ReadCapacityUnits: 1,

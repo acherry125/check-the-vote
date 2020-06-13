@@ -1,6 +1,7 @@
 import * as express from 'express';
 import { Message } from '@check-the-vote/api-interfaces';
 import SyncUtils from './app/SyncUtils';
+import ApiUtils from './app/ApiUtils';
 
 var schedule = require('node-schedule');
 
@@ -11,6 +12,28 @@ const greeting: Message = { message: 'Welcome to api!' };
 app.get('/api', (req, res) => {
   res.send(greeting);
 });
+
+app.get('/api/v1/admin/sync', (req, res) => {
+  SyncUtils.syncDb()
+    .then(apiRes => {
+      res.send('OK');
+    })
+    .catch(err => {
+      res.send('Bad');
+    })
+})
+
+app.get('/api/v1/admin/test', (req, res) => {
+  const endpoint: string = ApiUtils.createCongressChamberEndpoint(115,'house','bills','active.json', { offset: 0 });
+  ApiUtils.requestCongressPage(endpoint)
+    .then(apiRes => {
+      res.send(apiRes);
+    })
+    .catch(err => {
+      res.send('Bad');
+    })
+})
+
 
 app.get('/api/v1/bill', (req, res) => {
   const query = req.query;
@@ -25,6 +48,5 @@ const server = app.listen(port, () => {
 
 server.on('error', console.error);
 
-const job = schedule.scheduleJob({hour: [5, 17], minute: 0}, SyncUtils.syncDb);
+// const job = schedule.scheduleJob({hour: [5, 17], minute: 0}, SyncUtils.syncDb);
 
-SyncUtils.syncDb();
