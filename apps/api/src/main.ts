@@ -2,7 +2,9 @@ import * as express from 'express';
 import { Message } from '@check-the-vote/api-interfaces';
 import DbUtils from './app/DbUtils';
 import SyncUtils from './app/SyncUtils';
-import ApiUtils from './app/ApiUtils';
+import * as _ from 'lodash';
+import { BillRequestType } from '@check-the-vote/common/types';
+
 
 var schedule = require('node-schedule');
 
@@ -15,7 +17,7 @@ app.get('/api', (req, res) => {
 });
 
 app.get('/api/v1/admin/sync', (req, res) => {
-  SyncUtils.syncDb()
+  SyncUtils.syncDb(116, 103)
     .then(apiRes => {
       res.send('OK');
     })
@@ -24,22 +26,14 @@ app.get('/api/v1/admin/sync', (req, res) => {
     })
 })
 
-app.get('/api/v1/admin/test', (req, res) => {
-  const endpoint: string = ApiUtils.createCongressChamberEndpoint(115,'house','bills','active.json', { offset: 0 });
-  ApiUtils.requestCongressPage(endpoint)
-    .then(apiRes => {
-      res.send(apiRes);
+app.get('/api/v1/bills/:chamber/:billNumber', (req: BillRequestType, res) => {
+  const { params } = req;
+  console.log(params);
+  DbUtils.getBillsByChamberAndBillNumber(params.chamber, params.billNumber)
+    .then(dbResponse => {
+      res.send(_.flatMap(dbResponse))
     })
-    .catch(err => {
-      res.send('Bad');
-    })
-})
-
-
-app.get('/api/v1/bill', (req, res) => {
-  const query = req.query;
-  console.log(query);
-  res.send('This is a test.')
+    .catch(err => res.status(500).send({ error: err }))
 })
 
 const port = process.env.port || 3333;

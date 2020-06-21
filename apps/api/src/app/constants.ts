@@ -1,2 +1,0 @@
-export const MAX_API_BILL_PAGE_SIZE = 20;
-export const MAX_DYNAMODB_BATCH_WRITE_SIZE = 25;

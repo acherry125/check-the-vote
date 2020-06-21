@@ -19,6 +19,9 @@ $blue-green: #6393a6;
 $pink--s-40: saturate($pink, 40%);
 $blue-green--s-40: saturate($blue-green, 40%);
 
+$senate-blue: $blue-green--s-40;
+$house-pink: $pink--s-40;
+
 $input-height: 2em;
 $form-group-height: 3.75em;
 
@@ -69,6 +72,14 @@ img {
   label {
     color: $white;
   }
+
+  a {
+    color: $senate-blue;
+    font-weight: bold;
+    &:hover,&:focus,&:active {
+      color: $blue-green;
+    }
+  }
 }
 
 .page-container--standard {
@@ -105,13 +116,13 @@ img {
   }
 
   &__option:first-child {
-    color: $blue-green--s-40;
+    color: $senate-blue;
     grid-column-start: 3;
     grid-column-end: 4;
   }
 
   &__option:nth-child(2) {
-    color: $pink--s-40;
+    color: $house-pink;
     grid-column-start: 4;
     grid-column-end: 5;
   }
@@ -168,5 +179,16 @@ img {
         &:disabled {
             background-color: saturate($pink, 10%);
         }
+    }
+}
+
+.bill-result-card {
+    background: $blue-dark;
+    padding: 1rem 2.5rem;
+    .title--senate {
+      color: $senate-blue;
+    }
+    .title--house {
+      color: $house-pink
     }
 }

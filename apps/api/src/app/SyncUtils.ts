@@ -1,54 +1,73 @@
 import ApiUtils from './ApiUtils';
 import DbUtils from './DbUtils';
 import { BILLS_TABLE_DEFINITION } from './DbTableDefinitions';
+import * as _ from 'lodash';
+import * as math from 'mathjs';
 import { 
   MAX_DYNAMODB_BATCH_WRITE_SIZE,
   MAX_API_BILL_PAGE_SIZE
-} from './constants';
-import _ from 'lodash';
-import * as math from 'mathjs';
-import { ApiBill } from './types';
+} from '@check-the-vote/common/constants';
+import { ApiBill } from '@check-the-vote/common/types';
 import { AWSError } from 'aws-sdk';
 
 const MIN_COMMON_WRITE_API_SIZE = math.lcm(MAX_API_BILL_PAGE_SIZE, MAX_DYNAMODB_BATCH_WRITE_SIZE);
 
-const syncDb = (): Promise<boolean | AWSError> => {
+const syncDb = (mostRecentSession, earliestSession): Promise<boolean | AWSError> => {
   console.log('syncing');
-  const session = 115;
-  const chamber = 'house';
-  return populateDBWithBills(session, chamber);
+  const chamber = 'both';
+  if (mostRecentSession < earliestSession) {
+    return Promise.resolve(true);
+  }
+
+  return populateDBWithBills(mostRecentSession, chamber)
+    .then(res => {
+      return syncDb(mostRecentSession - 1, earliestSession)
+    })
+
 }
 
-const makeGetBillEndpoint = (session:115, chamber:string, offset: number): string => ApiUtils.createCongressChamberEndpoint(session, chamber, 'bills','active.json', { offset: offset });
+const makeGetBillEndpoint = (session:115, chamber:string, offset: number): string => ApiUtils.createCongressChamberEndpoint(session, chamber, 'bills','introduced.json', { offset: offset });
 
 const populateDBWithBills = (session, chamber) => {
 
-  let iter = 0;
-  const billsForChamberSession = [];
+  const populateHelper = (offset: number): Promise<boolean | AWSError> => {
+    const billsForChamberSession = [];
+    console.log('Syncing db, batch number', offset);
 
-  return populateDBWithSetOfBills(session, chamber, iter * MIN_COMMON_WRITE_API_SIZE, billsForChamberSession)
+    console.log(`Populating ${chamber} chamber session ${session} batch ${offset} for at offset ${offset * MIN_COMMON_WRITE_API_SIZE}`);
+
+    return populateDBWithSetOfBills(session, chamber, offset * MIN_COMMON_WRITE_API_SIZE, 0, billsForChamberSession)
     .then(retrievedBills => {
-      const session = 115;
-      const chamber = 'house';
-      return DbUtils.insertBillData(session, chamber, retrievedBills);
+      return DbUtils.insertBillData(retrievedBills);
     })
+    .then(bills => {
+      if (_.size(bills) % MIN_COMMON_WRITE_API_SIZE > 0) {
+        return true;
+      }
+      return populateHelper(offset + 1);
+    })
+    .catch((err:AWSError) => {
+      return err;
+    })
+  }
+
+  return populateHelper(0);
 }
 
-const populateDBWithSetOfBills = (session, chamber, offset, billsAccumulator): Promise<Array<ApiBill>> => {
-  console.log('Populating ', session, chamber, offset);
-  if (offset >= MIN_COMMON_WRITE_API_SIZE) {
+const populateDBWithSetOfBills = (session, chamber, startingRecord, offset, billsAccumulator): Promise<Array<ApiBill>> => {
+  const totalOffset = startingRecord + offset;
+  
+  if (totalOffset >= startingRecord + MIN_COMMON_WRITE_API_SIZE) {
     return billsAccumulator;
   }
 
 
-  const endpoint: string = makeGetBillEndpoint(session, chamber, offset);
-  console.log('endpoint', endpoint);
+  const endpoint: string = makeGetBillEndpoint(session, chamber, totalOffset);
   return ApiUtils.requestCongressPage(endpoint)
     .then(apiRes => {
-      console.log('Got response for offset', offset);
       const bills = apiRes[0]['bills'];
       _.forEach(bills, b => billsAccumulator.push(b));
-      return populateDBWithSetOfBills(session, chamber, offset + MAX_API_BILL_PAGE_SIZE, billsAccumulator);
+      return populateDBWithSetOfBills(session, chamber, startingRecord, offset + MAX_API_BILL_PAGE_SIZE, billsAccumulator);
     })
     .catch(err => {
       console.error(err);

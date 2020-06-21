@@ -17,6 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@check-the-vote/api-interfaces": ["libs/api-interfaces/src/index.ts"],
+      "@check-the-vote/common/*": ["libs/common/src/*"],
       "components/*": ["apps/check-the-vote-react/src/app/components/*"],
       "viewUtils/*": ["apps/check-the-vote-react/src/app/viewUtils/*"]
     }

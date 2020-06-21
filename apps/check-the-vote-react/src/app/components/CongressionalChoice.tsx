@@ -6,9 +6,7 @@ export const CongressionalChoice = () => {
 
   const handleSubmit = (chamber: String, billNumber: String):Promise<void> => {
     return RestUtils.searchByChamberAndBillNumber(chamber, billNumber)
-      .then(response => {
-        console.log(response);
-      })
+      .then(response => response.json())
       .catch(err => {
         console.error(err);
       })

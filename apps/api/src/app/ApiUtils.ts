@@ -1,5 +1,5 @@
 const superagent = require('superagent');
-const _ = require('lodash');
+import * as _ from 'lodash';
 
 const CONGRESS_API_BASE_URL = 'https://api.propublica.org/congress/v1/';
 const AUTH_HEADER = 'X-API-Key';
@@ -75,7 +75,7 @@ const handleResponseBody = (body): Object => {
   const count = _.get(results, [0, 'num_results']);
   const offset = _.get(results, [0, 'offset']);
 
-  console.log(`API has responded with ${count} results at offset ${offset}`);
+  // console.log(`API has responded with ${count} results at offset ${offset}`);
 
   return results;
 };
@@ -89,9 +89,6 @@ const handleResponse = (response: Response): Object => {
 };
 
 const requestCongressPage = (pageURL: string, count:number = 0): Promise<Response> => {
-  console.log(
-    'Attempting to request page at ' + pageURL + ' with count ' + count
-  );
   const urlToCall = CONGRESS_API_BASE_URL + pageURL;
   const apiKey = process.env.PRO_CONGRESS_API_KEY;
   if (apiKey) {
