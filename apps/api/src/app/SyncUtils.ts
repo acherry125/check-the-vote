@@ -1,6 +1,5 @@
 import ApiUtils from './ApiUtils';
 import DbUtils from './DbUtils';
-import { BILLS_TABLE_DEFINITION } from './DbTableDefinitions';
 import * as _ from 'lodash';
 import * as math from 'mathjs';
 import { 
@@ -13,11 +12,13 @@ import { AWSError } from 'aws-sdk';
 const MIN_COMMON_WRITE_API_SIZE = math.lcm(MAX_API_BILL_PAGE_SIZE, MAX_DYNAMODB_BATCH_WRITE_SIZE);
 
 const syncDb = (mostRecentSession, earliestSession): Promise<boolean | AWSError> => {
-  console.log('syncing');
   const chamber = 'both';
   if (mostRecentSession < earliestSession) {
+    console.log(`Finished synchronizing data at ${new Date().toString()} !`)
     return Promise.resolve(true);
   }
+
+  console.log('Populating chamber and session', chamber, mostRecentSession);
 
   return populateDBWithBills(mostRecentSession, chamber)
     .then(res => {
@@ -63,6 +64,7 @@ const populateDBWithSetOfBills = (session, chamber, startingRecord, offset, bill
 
 
   const endpoint: string = makeGetBillEndpoint(session, chamber, totalOffset);
+
   return ApiUtils.requestCongressPage(endpoint)
     .then(apiRes => {
       const bills = apiRes[0]['bills'];

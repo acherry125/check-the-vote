@@ -17,7 +17,10 @@ app.get('/api', (req, res) => {
 });
 
 app.get('/api/v1/admin/sync', (req, res) => {
-  SyncUtils.syncDb(116, 103)
+  const latestCongress = 116;
+  const earliestAvailableCongress = 103;
+
+  SyncUtils.syncDb(latestCongress, earliestAvailableCongress)
     .then(apiRes => {
       res.send('OK');
     })

@@ -127,8 +127,8 @@ const writeBatchParamsToTable = (
 const insertBillData = (
   bills: Array<ApiBill>
 ): Promise<Object[] | AWSError> => {
-  console.log('Inserting data for: ');
   const batchesOfBillsToWrite = toBatches(bills);
+  console.log('Inserting data for: ', _.size(batchesOfBillsToWrite), 'batches');
 
   const allBatchParams = _.map(batchesOfBillsToWrite, (batch) => {
     return _.map(batch, (bill: ApiBill) => {
@@ -165,20 +165,19 @@ const getBillsByChamberAndBillNumber = (
 ): Promise<Object> => {
   const billNumberStripped = _.last(_.split(billNumber, '.'));
   const typesForBill = BILL_TYPES_FOR_CHAMBER[chamber];
-  const queryPromises = _.map(typesForBill, type => {
+  const queryPromises = _.map(typesForBill, (type) => {
     const params = {
       ExpressionAttributeValues: {
         ':billNmbr': type + billNumberStripped,
         ':chamber': chamber,
       },
       ExpressionAttributeNames: {
-        "#billNmbr": "billNmbr",
-        "#chamber": "chamber"
+        '#billNmbr': 'billNmbr',
+        '#chamber': 'chamber',
       },
       KeyConditionExpression: '#billNmbr = :billNmbr and #chamber = :chamber',
       TableName: 'Bills',
     };
-    console.log(params);
     return new Promise((resolve, reject) => {
       docClient.query(params, function (err, data) {
         if (err) reject(err);
@@ -186,8 +185,8 @@ const getBillsByChamberAndBillNumber = (
         else resolve(data.Items); // successful response
       });
     });
-  })
-  
+  });
+
   return Promise.all(queryPromises);
 };
 
