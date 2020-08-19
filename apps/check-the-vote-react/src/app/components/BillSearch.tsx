@@ -16,17 +16,8 @@ export const BillSearch = (props) => {
 
   return (
     <form className="bill-search-form form" onSubmit={handleSubmit}>
-      <div className="form-input-group--vertical">
-        <label htmlFor="bill-chamber">Chamber</label>
-        <select id="bill-chamber" value={chamber} onChange={e => setChamber(eventUtils.getTargetValue(e))}>
-          <option value=""></option>
-          <option value="H.R.">H.R.</option>
-          <option value="S.">S.</option>
-        </select>
-      </div>
-      <div className="form-input-group--vertical">
-        <label htmlFor="bill-number">Bill Number</label>
-        <input type="text" id="bill-number" value={billNumber} onChange={e => setBillNumber(eventUtils.getTargetValue(e))}/>
+      <div className="form-input">
+        <input type="text" id="bill-number" placeHolder="Bill Number" value={billNumber} onChange={e => setBillNumber(eventUtils.getTargetValue(e))}/>
       </div>
       <SubmitButton disabledSubmit={disabledSubmit} />
     </form>
