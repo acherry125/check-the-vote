@@ -1,5 +1,5 @@
 const superagent = require('superagent');
-const _ = require('lodash');
+import * as _ from 'lodash';
 
 const CONGRESS_API_BASE_URL = 'https://api.propublica.org/congress/v1/';
 const AUTH_HEADER = 'X-API-Key';
@@ -9,7 +9,7 @@ const OFFSET_INCREMENT = 20;
 const createQueryString = (query = []) => {
   if (!_.isEmpty(query)) {
     const queryString = _.join(
-      _.map(query, (val, key) => key + '=' + 'val'),
+      _.map(query, (val, key) => key + '=' + val),
       '&'
     );
     return '?' + queryString;
@@ -20,6 +20,7 @@ const createQueryString = (query = []) => {
 const createCongressChamberEndpoint = (
   congressNumber,
   chamber,
+  apiType,
   resource,
   query
 ) => {
@@ -69,17 +70,17 @@ const nextPage = (endpoint, result) => {
   return `${finalEndpoint}${OFFSET}=${newOffset}`;
 };
 
-const handleResponseBody = (body, requestCount) => {
+const handleResponseBody = (body): Object => {
   const { results } = body;
   const count = _.get(results, [0, 'num_results']);
   const offset = _.get(results, [0, 'offset']);
 
-  console.log(`API has responded with ${count} results at offset ${offset}`);
+  // console.log(`API has responded with ${count} results at offset ${offset}`);
 
   return results;
 };
 
-const handleResponse = (response) => {
+const handleResponse = (response: Response): Object => {
   if (response.ok && response.status === 200) {
     return response.body;
   } else {
@@ -87,10 +88,7 @@ const handleResponse = (response) => {
   }
 };
 
-const requestCongressPage = (pageURL, count = 0) => {
-  console.log(
-    'Attempting to request page at ' + pageURL + ' with count ' + count
-  );
+const requestCongressPage = (pageURL: string, count:number = 0): Promise<Response> => {
   const urlToCall = CONGRESS_API_BASE_URL + pageURL;
   const apiKey = process.env.PRO_CONGRESS_API_KEY;
   if (apiKey) {
@@ -98,7 +96,7 @@ const requestCongressPage = (pageURL, count = 0) => {
       .get(urlToCall)
       .set(AUTH_HEADER, apiKey)
       .then(handleResponse)
-      .then((res) => handleResponseBody(res, count))
+      .then((res) => handleResponseBody(res))
       .catch((err) => {
         console.error('Error GETing ' + CONGRESS_API_BASE_URL + pageURL);
         return {
@@ -114,7 +112,7 @@ const requestCongressPage = (pageURL, count = 0) => {
   }
 };
 
-module.exports = {
+export default {
   CONGRESS_API_BASE_URL,
   createCongressChamberEndpoint,
   createCongressChamberBaseResourceEndpoint,
