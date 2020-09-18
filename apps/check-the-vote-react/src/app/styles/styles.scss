@@ -200,14 +200,40 @@ nav {
   background-color: $black;
   width: 90%;
   margin: 0 auto;
-  padding: 1rem;
+  padding: .66rem 1rem;
+  border-radius: 10px;
   .call-to-action-title {
     text-align: center;
-    padding-bottom: 1rem;
-    font-size: 2.37rem;
+    font-size: 3rem;
     color: $blue;
     font-weight: bold;
   }
+  .call-to-action-info {
+    display: block;
+    margin: 0 auto;
+    line-height: 1.33rem;
+    font-family: 'Roboto Condensed', sans-serif;
+
+    color: $white;
+  }
+  .call-to-action-btn {
+    display: block;
+
+    text-decoration: none;
+    text-align: center;
+    font-size: 1.77rem;
+    text-transform: uppercase;
+
+    padding: 1rem 1.77rem;
+    margin: 1.77rem auto 1rem;
+    max-width: 200px;
+    border-radius: 10px;
+
+    color: $black;
+    background-color: $blue;
+
+  }
+
 }
 
 
