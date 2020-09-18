@@ -16,6 +16,9 @@ export const BillSearch = (props) => {
 
   return (
     <form className="bill-search-form form" onSubmit={handleSubmit}>
+      //Deleted previous select element, because it seemed redundant to have those two big buttons there and the select pointing to the same thing.
+      //Currently attempting to make the big Congressional Choice buttons act as a filter for search results.
+      //Also researching about accessibility Concerns of doing so.
       <label htmlFor="bill-number" style={{opacity: 0}}>Please Enter Bill Number </label>
       <input type="text" id="bill-number" className="form-input" placeHolder="Search Bill Number" value={billNumber} onChange={e => setBillNumber(eventUtils.getTargetValue(e))}/>
       <SubmitButton disabledSubmit={disabledSubmit} />
