@@ -10,7 +10,7 @@ export const Navegation = () => {
 
   return (
       <nav>
-        <h1>Check The Vote</h1>
+        <h1 className="logo"><a className="logo-link"href="#">Check The Vote</a></h1>
         <ul className="nav-list">
           < NavigationLink link="#" name="Senate"/>
           < NavigationLink link="#" name="House"/>

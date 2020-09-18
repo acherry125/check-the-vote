@@ -16,9 +16,7 @@ export const BillSearch = (props) => {
 
   return (
     <form className="bill-search-form form" onSubmit={handleSubmit}>
-      <div className="form-input">
-        <input type="text" id="bill-number" placeHolder="Bill Number" value={billNumber} onChange={e => setBillNumber(eventUtils.getTargetValue(e))}/>
-      </div>
+      <input type="text" id="bill-number" className="form-input" placeHolder="Search Bill Number" value={billNumber} onChange={e => setBillNumber(eventUtils.getTargetValue(e))}/>
       <SubmitButton disabledSubmit={disabledSubmit} />
     </form>
   );
