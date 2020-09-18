@@ -3,30 +3,26 @@
 @import './font-families.scss';
 
 /* Color Theme Swatches in Hex */
-$black: #07080d;
+$black: #121212;
 $white: #f0f0f2;
-$steel: #293040;
-$fog: #5e6d8c;
-$grey: #4c5d73;
+$grey: #515662;
+$dark-grey: #293040;
+$blue: #4AB6D4;
+$blue-light: #8AE6FF;
+$blue-dark: #15B8E5;
+$opaque-blue: rgba(145, 214, 234, 0.60);
 
-/* Color Theme Swatches in Hex */
-$pink: #bf7a8d;
-$blue-dark: #011526;
-$blue-med: #0d2840;
-$blue-light: #325a73;
-$blue-green: #6393a6;
-
-$pink--s-40: saturate($pink, 40%);
-$blue-green--s-40: saturate($blue-green, 40%);
 
 $input-height: 2em;
 $form-group-height: 3.75em;
+$media-query-breakpoint-desktop-min: 800px;
 
 html,
 body,
 #root {
   height: 100%;
   font-family: NewsCycle, sans-serif;
+  
 }
 
 div,
@@ -55,8 +51,8 @@ img {
   box-sizing: border-box;
 }
 
-.dark-theme {
-  background: $black;
+body {
+  background: $dark-grey;
   overflow: auto;
   min-height: 100%;
   h1,
@@ -71,49 +67,39 @@ img {
   }
 }
 
+
+/* CongressionalChoice
+===========> */
+
 .page-container--standard {
   padding: 2rem 1rem;
+  background-color: $black;
+  width: 95%;
+  margin: 30px auto;
+  border-radius: 10px;
 }
-
-.page-header {
-  text-align: center;
-}
-
 .congress-choice-container {
-  display: grid;
-  margin: 1rem 0;
-  grid-template-columns: 10px auto 30% 30% auto 10px;
-  grid-template-rows: 300px;
-
+  display: block;
   &__option {
-    grid-row-start: 1;
-    grid-row-end: 2;
+    max-width: 500px;
     font-family: Cinzel, sans-serif;
     font-weight: bold;
-    font-size: 4rem;
-    background-image: linear-gradient(70deg, $steel, 45%, lighten($steel, 1%));
-    margin: 0.25rem 1.5rem;
+    font-size: 5rem;
+    background-color: $grey;
+    color: $blue;
+    margin: .25em auto;
+    padding-top: .15em;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 5px;
     &:hover,
-    &:focus,
     &:active {
       opacity: 0.6;
     }
-  }
-
-  &__option:first-child {
-    color: $blue-green--s-40;
-    grid-column-start: 3;
-    grid-column-end: 4;
-  }
-
-  &__option:nth-child(2) {
-    color: $pink--s-40;
-    grid-column-start: 4;
-    grid-column-end: 5;
+    &:focus {
+      outline: 2px solid $blue;
+    }
   }
 }
 
@@ -131,23 +117,18 @@ img {
 .bill-search-form {
   padding: 1rem 2rem;
   display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
+  flex-flow: row;
+  justify-content: flex-start;
   align-items: flex-end;
-  font-size: 1.5rem;
-}
-
-.form-input-group {
-  &--vertical {
-    height: $form-group-height;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin: 0 0.3em;
-    input,select { 
-        width: 100%;
-    }
+  font-size: 1.333rem;
+  .form-input {
+    border:none;
+    max-width: 300px;
+    width: 80%;
+    color: $blue;
+    background-color: $grey;
+    border-radius: 10px 0px 0px 10px;
+    text-indent: 30px;
   }
 }
 
@@ -156,17 +137,83 @@ img {
     box-shadow: 0;
     border-color: 0;
     border-style: none;
-    border-radius: 0.1em;
+    border-radius: 0px 8px 8px 0px;
     cursor: pointer;
     &.button--inline-submit {
         height: $input-height;
     }
+
     &.primary {
-        background-color: saturate($pink, 50%);
-        color: $white;
+        background-color: $blue;
+        color: $dark-grey;
         font-weight: bold;
         &:disabled {
-            background-color: saturate($pink, 10%);
+            background-color: saturate($grey, 10%);
         }
+      
     }
+}
+
+/* Navigation
+===========> */
+nav {
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: $black;
+  .logo{
+    font-size: 2.37rem;
+    margin-top: 0;
+    .logo-link {
+      text-decoration: none;
+      color: $blue-dark;
+    }
+  }
+  .nav-list {
+    margin: 0 0 1.33rem;
+    padding: 0;
+    list-style-type: none;
+    font-size: 1.333rem;
+    .nav-list-item {
+      display: inline-block;
+      .nav-link {
+      text-decoration: none;
+      color: $white;
+      }
+    }
+    .nav-list-item +.nav-list-item {
+      margin-left: 3.16rem;
+      }
+    
+  }
+}
+
+
+
+
+
+/* Call To Action
+===========> */
+
+
+
+
+
+
+/* Media
+===========> */
+
+
+@media(min-width: $media-query-breakpoint-desktop-min) {
+  .congress-choice-container {
+    display: flex;
+    justify-content: center;
+    &__option {
+      padding: 2em .2em;
+      width: 300px;
+      margin: 0 .5em;
+    }
+  }
 }
